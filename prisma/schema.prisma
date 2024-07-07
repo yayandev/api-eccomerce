@@ -24,6 +24,7 @@ model User {
    tokens    Token[]
    categories Category[]
    products Product[]
+   carts Cart[]
 }
 
 model Token {
@@ -65,6 +66,18 @@ model Product {
    imagesFile  Json
    price    String
    description String
+   created_at  DateTime  @default(now())
+   updated_at  DateTime  @updatedAt
+   carts Cart[]
+}
+
+model Cart {
+   id       String    @id @default(auto()) @map("_id") @db.ObjectId
+   user     User @relation(fields: [user_id], references: [id])
+   user_id  String @db.ObjectId
+   product_id  String @db.ObjectId
+   product  Product @relation(fields: [product_id], references: [id])
+   quantity Int
    created_at  DateTime  @default(now())
    updated_at  DateTime  @updatedAt
 }
