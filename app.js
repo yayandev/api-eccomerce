@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import router from "./routes/index.js";
 
-dotenv.config({ path: "./.env" });
+dotenv.config();
 
 const app = express();
 
