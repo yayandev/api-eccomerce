@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "preinstall": "npx prisma generate",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
