@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx prisma generate",
-    "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
