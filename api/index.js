@@ -1,11 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import router from "./routes/index.js";
+import router from "../routes/index.js";
 
 dotenv.config({ path: "./.env" });
 
-const port = 5000;
 const app = express();
 
 app.use(express.json());
@@ -17,6 +16,6 @@ app.get("/", (req, res) => {
 
 app.use(router);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(3000, () => {
+  console.log(`Example app listening on port ${3000}`);
 });
