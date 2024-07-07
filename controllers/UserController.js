@@ -1,7 +1,6 @@
 import prisma from "../utils/prisma.js";
 import bcryptjs from "bcryptjs";
 import UAParser from "ua-parser-js";
-import geoip from "geoip-lite";
 
 function generateUniqueToken(userId) {
   const date = new Date().toISOString(); // Dapatkan tanggal saat ini dalam format ISO
@@ -41,8 +40,7 @@ function getClientInfo(req) {
 
 // Fungsi untuk mendapatkan lokasi berdasarkan IP
 function getClientLocation(ip) {
-  const geo = geoip.lookup(ip);
-  return geo ? `${geo.city}, ${geo.country}` : "unknown";
+  return "unknown";
 }
 
 export const createUser = async (req, res) => {
