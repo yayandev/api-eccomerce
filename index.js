@@ -5,7 +5,7 @@ import router from "./routes/index.js";
 
 dotenv.config({ path: "./.env" });
 
-const port = process.env.PORT || 3000;
+const port = 5000;
 const app = express();
 
 app.use(express.json());
