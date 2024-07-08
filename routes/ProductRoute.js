@@ -7,6 +7,7 @@ import {
   getProduct,
   getProducts,
   searchProduct,
+  updateProduct,
 } from "../controllers/ProductController.js";
 import auth from "../middlewares/auth.js";
 import adminOnly from "../middlewares/adminOnly.js";
@@ -23,6 +24,7 @@ ProductRoute.post(
   createProduct
 );
 
+ProductRoute.patch("/products/:id", auth, adminOnly, updateProduct);
 ProductRoute.delete("/products/:id", auth, adminOnly, deleteProduct);
 ProductRoute.post(
   "/products/:id/deleteimage",

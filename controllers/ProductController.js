@@ -56,6 +56,20 @@ export const getProduct = async (req, res) => {
             name: true,
           },
         },
+        reviews: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            comment: true,
+            rating: true,
+            created_at: true,
+          },
+        },
       },
     });
 
@@ -113,11 +127,13 @@ export const createProduct = async (req, res) => {
       slug = slug + "-" + Math.floor(Math.random() * 10000);
     }
 
+    let priceFloat = parseFloat(price);
+
     const product = await prisma.product.create({
       data: {
         name,
         description,
-        price,
+        price: priceFloat,
         category_id,
         user_id,
         imagesUrl,
@@ -158,6 +174,8 @@ export const updateProduct = async (req, res) => {
         message: "All fields are required",
       });
     }
+
+    let priceFloat = parseFloat(price);
 
     const product = await prisma.product.findUnique({
       where: {
@@ -202,7 +220,7 @@ export const updateProduct = async (req, res) => {
       data: {
         name,
         description,
-        price,
+        price: priceFloat,
         category_id,
         slug: product.slug,
       },
@@ -237,6 +255,9 @@ export const deleteProduct = async (req, res) => {
       where: {
         id,
       },
+      include: {
+        reviews: true,
+      },
     });
 
     if (!product) {
@@ -254,6 +275,17 @@ export const deleteProduct = async (req, res) => {
     }
 
     const imagesFile = product.imagesFile;
+    const reviews = product.reviews;
+
+    if (reviews.length > 0) {
+      reviews.map(async (review) => {
+        await prisma.review.delete({
+          where: {
+            id: review.id,
+          },
+        });
+      });
+    }
 
     const deletedProduct = await prisma.product.delete({
       where: {

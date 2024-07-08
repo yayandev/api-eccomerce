@@ -25,6 +25,7 @@ model User {
    categories Category[]
    products Product[]
    carts Cart[]
+   reviews Review[]
 }
 
 model Token {
@@ -64,11 +65,12 @@ model Product {
    category_id  String @db.ObjectId
    imagesUrl   Json
    imagesFile  Json
-   price    String
+   price      Float
    description String
    created_at  DateTime  @default(now())
    updated_at  DateTime  @updatedAt
    carts Cart[]
+   reviews Review[]
 }
 
 model Cart {
@@ -78,6 +80,18 @@ model Cart {
    product_id  String @db.ObjectId
    product  Product @relation(fields: [product_id], references: [id])
    quantity Int
+   created_at  DateTime  @default(now())
+   updated_at  DateTime  @updatedAt
+}
+
+model Review {
+   id       String    @id @default(auto()) @map("_id") @db.ObjectId
+   user     User @relation(fields: [user_id], references: [id])
+   user_id  String @db.ObjectId
+   product_id  String @db.ObjectId
+   product  Product @relation(fields: [product_id], references: [id])
+   rating Int
+   comment String
    created_at  DateTime  @default(now())
    updated_at  DateTime  @updatedAt
 }
