@@ -7,8 +7,27 @@ export const getProducts = async (req, res) => {
     const take = parseInt(req.query.take) || 10;
 
     const products = await prisma.product.findMany({
-      include: {
-        category: true,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        price: true,
+        discountPercentage: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        imagesUrl: true,
       },
       skip,
       take,
@@ -16,14 +35,13 @@ export const getProducts = async (req, res) => {
 
     const totalProducts = await prisma.product.count();
 
-    const totalPages = Math.ceil(totalProducts / take);
-
     return res.status(200).json({
       success: true,
       message: "Products found",
       products,
       totalProducts,
-      totalPages,
+      take,
+      skip,
     });
   } catch (error) {
     console.log(error);
@@ -96,19 +114,25 @@ export const getProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category_id } = req.body;
+    const {
+      name,
+      description,
+      price,
+      category_id,
+      discountPercentage,
+      options,
+      stock,
+    } = req.body;
     const user_id = req.user.id;
     const imagesUrl = [];
     const imagesFile = [];
 
-    if (req.files) {
-      req.files.map((file) => {
-        imagesUrl.push(file.path);
-        imagesFile.push(file.filename);
-      });
-    }
+    req?.files.forEach((file) => {
+      imagesUrl.push(file.path);
+      imagesFile.push(file.filename);
+    });
 
-    if (!name || !description || !price || !category_id) {
+    if (!name || !description || !price || !category_id || !stock) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -128,6 +152,13 @@ export const createProduct = async (req, res) => {
     }
 
     let priceFloat = parseFloat(price);
+    let discountPercentageInt = parseInt(discountPercentage);
+    let stockInt = parseInt(stock);
+
+    let dataOptions = null;
+    if (options) {
+      dataOptions = JSON.parse(options);
+    }
 
     const product = await prisma.product.create({
       data: {
@@ -139,6 +170,9 @@ export const createProduct = async (req, res) => {
         imagesUrl,
         imagesFile,
         slug,
+        discountPercentage: discountPercentageInt,
+        options: dataOptions,
+        stock: stockInt,
       },
     });
 
@@ -166,9 +200,24 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, category_id } = req.body;
+    const {
+      name,
+      description,
+      price,
+      category_id,
+      stock,
+      discountPercentage,
+      options,
+    } = req.body;
 
-    if (!name || !description || !price || !category_id) {
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !category_id ||
+      !stock ||
+      !discountPercentage
+    ) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -176,6 +225,13 @@ export const updateProduct = async (req, res) => {
     }
 
     let priceFloat = parseFloat(price);
+    let discountPercentageInt = parseInt(discountPercentage);
+    let stockInt = parseInt(stock);
+
+    let dataOptions = null;
+    if (options) {
+      dataOptions = JSON.parse(options);
+    }
 
     const product = await prisma.product.findUnique({
       where: {
@@ -223,6 +279,9 @@ export const updateProduct = async (req, res) => {
         price: priceFloat,
         category_id,
         slug: product.slug,
+        discountPercentage: discountPercentageInt,
+        options: dataOptions,
+        stock: stockInt,
       },
     });
 

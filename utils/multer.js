@@ -5,7 +5,7 @@ import cloudinary from "./cloudinary.js";
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "eccomerce",
+    folder: "belanjakeun",
     allowed_formats: ["jpg", "png", "jpeg"],
   },
 });
