@@ -73,7 +73,7 @@ model Product {
    carts Cart[]
    reviews Review[]
    discountPercentage Int @default(0)
-   stock Int 
+   stock Int @default(0)
    options Json?
 }
 
