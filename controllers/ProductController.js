@@ -55,7 +55,7 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
 
     const product = await prisma.product.findUnique({
       where: {
@@ -106,6 +106,7 @@ export const getProduct = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      error: error.message,
     });
   }
 };
