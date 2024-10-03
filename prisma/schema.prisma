@@ -72,8 +72,8 @@ model Product {
    updated_at  DateTime  @updatedAt
    carts Cart[]
    reviews Review[]
-   discountPercentage Int
-   stock Int
+   discountPercentage Int @default(0)
+   stock Int 
    options Json?
 }
 
