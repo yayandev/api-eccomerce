@@ -61,7 +61,13 @@ export const getProduct = async (req, res) => {
       where: {
         id,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        price: true,
+        discountPercentage: true,
         category: {
           select: {
             id: true,
@@ -75,20 +81,11 @@ export const getProduct = async (req, res) => {
             name: true,
           },
         },
-        reviews: {
-          select: {
-            id: true,
-            user: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            comment: true,
-            rating: true,
-            created_at: true,
-          },
-        },
+        imagesUrl: true,
+        imagesFile: true,
+        reviews: true,
+        options: true,
+        stock: true,
       },
     });
 
